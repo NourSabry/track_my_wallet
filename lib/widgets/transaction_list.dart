@@ -12,71 +12,79 @@ class TransactionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 500,
-      child: transactions.isEmpty
-          ? Column(
+    return transactions.isEmpty
+        ? LayoutBuilder(builder: (ctx, constraint) {
+            return Column(
               children: [
                 Text(
                   "No Transactions added yet",
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                const SizedBox(
-                  height: 15,
+                SizedBox(
+                  height: constraint.maxHeight * 0.05,
                 ),
                 SizedBox(
-                  height: 200,
+                  height: constraint.maxHeight * 0.6,
                   child: Image.asset(
                     "assets/images/waiting.png",
                     fit: BoxFit.cover,
                   ),
                 ),
               ],
-            )
-          : ListView.builder(
-              itemBuilder: ((context, index) => Card(
-                    elevation: 5,
-                    margin:
-                        const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        radius: 30,
-                        child: Padding(
-                          padding: const EdgeInsets.all(6.0),
-                          child: FittedBox(
-                            child: Text(
-                              '\$${transactions[index].amount!.toStringAsFixed(2)}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              ),
+            );
+          })
+        : ListView.builder(
+            itemBuilder: ((context, index) => Card(
+                  elevation: 5,
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 5,
+                    vertical: 8,
+                  ),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 30,
+                      child: Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: FittedBox(
+                          child: Text(
+                            '\$${transactions[index].amount!.toStringAsFixed(2)}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
                       ),
-                      title: Text(
-                        transactions[index].title!,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      subtitle: Text(
-                        DateFormat.yMMMd().format(transactions[index].date!),
-                        style: const TextStyle(
-                          color: Colors.grey,
-                        ),
-                      ),
-                      trailing: IconButton(
-                        color: Theme.of(context).errorColor,
-                        onPressed: () => deleteTx(transactions[index].id!),
-                        icon: const Icon(Icons.delete),
+                    ),
+                    title: Text(
+                      transactions[index].title!,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  )),
-              itemCount: transactions.length,
-            ),
-    );
+                    subtitle: Text(
+                      DateFormat.yMMMd().format(transactions[index].date!),
+                      style: const TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    trailing: MediaQuery.of(context).size.width > 460
+                        ? TextButton.icon(
+                            onPressed: () => deleteTx(transactions[index].id!),
+                            label: const Text(
+                              "Delete",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                            icon: const Icon(Icons.delete),
+                          )
+                        : IconButton(
+                            color: Theme.of(context).errorColor,
+                            onPressed: () => deleteTx(transactions[index].id!),
+                            icon: const Icon(Icons.delete),
+                          ),
+                  ),
+                )),
+            itemCount: transactions.length,
+          );
   }
 }

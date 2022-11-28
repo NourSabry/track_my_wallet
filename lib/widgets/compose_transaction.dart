@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:track_my_wallet/widgets/adaptive_flat_button.dart';
+import 'package:track_my_wallet/widgets/customized_elevated_butoon.dart';
 
 class NewTransaction extends StatefulWidget {
   const NewTransaction(this.newtx);
@@ -48,60 +50,54 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            TextField(
-              decoration: const InputDecoration(labelText: "title"),
-              controller: _titleController,
-              onSubmitted: (_) => submitData(),
-            ),
-            TextField(
-              decoration: const InputDecoration(labelText: "amount"),
-              controller: _amountController,
-              onSubmitted: (_) => submitData(),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 5),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  _selectedDate == null
-                      ? "No date chosen yet"
-                      : 'picked date is: ${DateFormat.yMd().format(_selectedDate!)}',
-                  style: const TextStyle(color: Colors.grey),
-                ),
-                TextButton(
-                  onPressed: _presentDatePicker,
-                  child: Text(
-                    "choose date",
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'OpenSans'),
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 4,
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: 10,
+            left: 10,
+            right: 10,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              TextField(
+                decoration: const InputDecoration(labelText: "title"),
+                controller: _titleController,
+                onSubmitted: (_) => submitData(),
+              ),
+              TextField(
+                decoration: const InputDecoration(labelText: "amount"),
+                controller: _amountController,
+                onSubmitted: (_) => submitData(),
+                keyboardType: TextInputType.number,
+              ),
+              const SizedBox(height: 5),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    _selectedDate == null
+                        ? "No date chosen yet"
+                        : 'picked date is: ${DateFormat.yMd().format(_selectedDate!)}',
+                    style: const TextStyle(
+                      color: Colors.grey,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            ElevatedButton(
-              onPressed: submitData,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
+                  AdaptiveFlatButton(
+                    'Choose Date',
+                    _presentDatePicker,
+                  ),
+                ],
               ),
-              child: const Text(
-                "Add transaction",
+              CustomizedElevatedButton(
+                onPressed: submitData,
+                title: "Add transaction",
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
